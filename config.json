@@ -1,0 +1,168 @@
+{
+  "_comment": "=== CONFIGURACION SIMPLIFICADA SCOPUS CSV TO RDF ===",
+  "_info": "Este archivo contiene TODAS las columnas del CSV de Scopus con configuración optimizada",
+  
+  "ontology": {
+    "base_uri": "https://onto.utpl.edu.ec/scopus/resource/",
+    "_note": "Cambiar por tu dominio: https://tu-organizacion.com/ontologia/"
+  },
+  
+  "prefixes": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dc": "http://purl.org/dc/elements/1.1/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "bibo": "http://purl.org/ontology/bibo/",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "schema": "http://schema.org/",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "scopus": "https://onto.utpl.edu.ec/scopus/resource/"
+  },
+
+  "entity_type_mappings": {
+    "Person": "foaf:Person",
+    "Concept": "skos:Concept", 
+    "CreativeWork": "schema:CreativeWork",
+    "Organization": "foaf:Organization",
+    "Journal": "bibo:Journal",
+    "Event": "schema:Event"
+  },
+
+  "entity_properties": {
+    "Person": [["foaf:name", "xsd:string"], ["scopus:authorId", "xsd:string"]],
+    "Concept": [["skos:prefLabel", "xsd:string"]],
+    "CreativeWork": [["dc:title", "xsd:string"]],
+    "Organization": [["foaf:name", "xsd:string"]],  
+    "Journal": [["dc:title", "xsd:string"], ["bibo:issn", "xsd:string"]],
+    "Event": [["schema:name", "xsd:string"], ["schema:startDate", "xsd:date"], ["schema:location", "xsd:string"]]
+  },
+
+  "document_type_mappings": {
+    "Article": "bibo:AcademicArticle",
+    "Conference Paper": "bibo:Proceedings", 
+    "Conference paper": "bibo:Proceedings",
+    "Review": "bibo:Review",
+    "Book Chapter": "bibo:BookSection",
+    "Book": "bibo:Book",
+    "Editorial": "bibo:Editorial",
+    "Letter": "bibo:Letter",
+    "Note": "bibo:Note"
+  },
+
+  "datatypes": {
+    "Year": "xsd:gYear",
+    "Cited by": "xsd:integer",
+    "Page start": "xsd:integer", 
+    "Page end": "xsd:integer",
+    "Page count": "xsd:integer",
+    "PubMed ID": "xsd:integer",
+    "Volume": "xsd:string",
+    "Issue": "xsd:string",
+    "DOI": "xsd:string",
+    "EID": "xsd:string",
+    "ISSN": "xsd:string",
+    "ISBN": "xsd:string",
+    "Conference code": "xsd:string",
+    "CODEN": "xsd:string"
+  },
+
+  "null_values": ["", "N/A", "nan", "null", "None", "[No author name available]"],
+
+  "_comment_mappings": "=== MAPEOS COMPLETOS: TODAS LAS COLUMNAS DEL CSV ===",
+  "mappings": {
+    "_core_fields": "Campos principales del documento",
+    "Authors": {"property": "dc:creator", "type": "Person"},
+    "Author full names": {"property": "foaf:name", "type": "Person"},
+    "Author(s) ID": {"property": "scopus:authorId", "type": "Person"},
+    "Title": {"property": "dc:title", "datatype": "xsd:string"},
+    "Year": {"property": "dcterms:date", "datatype": "xsd:gYear"},
+    "Abstract": {"property": "dcterms:abstract", "datatype": "xsd:string"},
+    "Document Type": {"property": "dc:type", "datatype": "xsd:string"},
+
+    "_publication_info": "Información de publicación",
+    "Source title": {"property": "dcterms:isPartOf", "type": "Journal"},
+    "Volume": {"property": "bibo:volume", "datatype": "xsd:string"},
+    "Issue": {"property": "bibo:issue", "datatype": "xsd:string"},
+    "Art. No.": {"property": "bibo:identifier", "datatype": "xsd:string"},
+    "Page start": {"property": "bibo:pageStart", "datatype": "xsd:integer"},
+    "Page end": {"property": "bibo:pageEnd", "datatype": "xsd:integer"},
+    "Page count": {"property": "bibo:numPages", "datatype": "xsd:integer"},
+    "Publisher": {"property": "dc:publisher", "type": "Organization"},
+    "ISSN": {"property": "bibo:issn", "datatype": "xsd:string"},
+    "ISBN": {"property": "bibo:isbn", "datatype": "xsd:string"},
+    "CODEN": {"property": "bibo:coden", "datatype": "xsd:string"},
+    "Abbreviated Source Title": {"property": "bibo:shortTitle", "datatype": "xsd:string"},
+    "Publication Stage": {"property": "bibo:status", "datatype": "xsd:string"},
+
+    "_identifiers": "Identificadores y enlaces",
+    "DOI": {"property": "bibo:doi", "datatype": "xsd:string"},
+    "Link": {"property": "schema:url", "datatype": "xsd:anyURI"},
+    "EID": {"property": "scopus:eid", "datatype": "xsd:string"},
+    "PubMed ID": {"property": "bibo:pmid", "datatype": "xsd:integer"},
+
+    "_metrics": "Métricas y citas",
+    "Cited by": {"property": "schema:citedByCount", "datatype": "xsd:integer"},
+    "Open Access": {"property": "schema:isAccessibleForFree", "datatype": "xsd:boolean"},
+
+    "_affiliations": "Afiliaciones y contactos",
+    "Affiliations": {"property": "foaf:workplaceHomepage", "type": "Organization"},
+    "Authors with affiliations": {"property": "dcterms:contributor", "datatype": "xsd:string"},
+    "Correspondence Address": {"property": "schema:address", "datatype": "xsd:string"},
+
+    "_subjects": "Temas y palabras clave",
+    "Author Keywords": {"property": "dc:subject", "type": "Concept"},
+    "Index Keywords": {"property": "dcterms:subject", "type": "Concept"},
+
+    "_conference": "Información de conferencias",
+    "Conference name": {"property": "bibo:presentedAt", "type": "Event"},
+    "Conference date": {"property": "dcterms:temporal", "datatype": "xsd:string"},
+    "Conference location": {"property": "schema:location", "datatype": "xsd:string"},
+    "Conference code": {"property": "bibo:identifier", "datatype": "xsd:string"},
+
+    "_funding": "Financiamiento",
+    "Funding Details": {"property": "schema:funding", "datatype": "xsd:string"},
+    "Funding Texts": {"property": "schema:fundingText", "datatype": "xsd:string"},
+    "Sponsors": {"property": "schema:sponsor", "type": "Organization"},
+
+    "_editorial": "Información editorial",
+    "Editors": {"property": "bibo:editor", "type": "Person"},
+    "References": {"property": "bibo:references", "datatype": "xsd:string"},
+
+    "_technical": "Información técnica",
+    "Molecular Sequence Numbers": {"property": "bibo:identifier", "datatype": "xsd:string"},
+    "Chemicals/CAS": {"property": "schema:chemicalComposition", "datatype": "xsd:string"},
+    "Tradenames": {"property": "schema:brand", "datatype": "xsd:string"},
+    "Manufacturers": {"property": "schema:manufacturer", "type": "Organization"},
+
+    "_language_source": "Idioma y fuente",
+    "Language of Original Document": {"property": "dc:language", "datatype": "xsd:string"},
+    "Source": {"property": "dcterms:source", "datatype": "xsd:string"}
+  },
+
+  "output": {
+    "main": "ontologia_scopus.ttl",
+    "encoding": "utf-8",
+    "_note": "Cambiar 'main' por tu archivo de salida deseado"
+  },
+
+  "validation": {
+    "required_fields": ["Title", "Authors", "Year"],
+    "max_uri_length": 200,
+    "enable_datatype_validation": true,
+    "_note": "Modificar required_fields según tus necesidades"
+  },
+
+  "_usage_guide": {
+    "_step1": "Modificar 'base_uri' con tu dominio",
+    "_step2": "Ajustar 'output.main' con tu archivo de salida",
+    "_step3": "Personalizar 'required_fields' si es necesario",
+    "_step4": "Agregar o modificar mapeos en la sección 'mappings'",
+    "_example_new_mapping": {
+      "Tu_Nueva_Columna": {
+        "property": "dc:description",
+        "datatype": "xsd:string"
+      }
+    }
+  }
+}
