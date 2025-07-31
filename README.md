@@ -1,4 +1,4 @@
-# 🔄 Convertidor Scopus CSV → RDF
+# 🔄 OntoCSV-RDF - Convertidor Scopus CSV → RDF
 
 ## 📖 **Descripción**
 Herramienta completa para transformar datos bibliográficos de Scopus (formato CSV) en ontologías RDF estructuradas y consultables. Incluye interfaz gráfica amigable y configuración personalizable.
@@ -15,12 +15,12 @@ python scopus_converter.py
 ## 📁 **Archivos Principales**
 - `scopus_converter.py` - Convertidor principal con GUI
 - `ejecutar.py` - Launcher recomendado
-- `config.json` - Configuración optimizada (45 mapeos CSV→RDF)
+- `config.json` - Configuración optimizada (46 mapeos CSV→RDF)
 - `GUIA_DE_USO.md` - **Guía completa para usuarios finales**
 
 ## 🎯 **Características**
 - ✅ **Interfaz gráfica completa** con Tkinter
-- ✅ **45 mapeos automáticos** de columnas CSV a propiedades RDF
+- ✅ **46 mapeos automáticos** de columnas CSV a propiedades RDF
 - ✅ **Configuración simplificada** para usuarios externos
 - ✅ **Validación automática** de datos de entrada
 - ✅ **Estadísticas detalladas** de conversión
@@ -45,5 +45,5 @@ python scopus_converter.py
 - Casos de uso típicos
 
 ## 🌟 **Desarrollado por**
-Universidad Técnica Particular de Loja (UTPL)
+Universidad Técnica Particular de Loja (UTPL)  
 Proyecto de Representación Avanzada de Conocimiento y Razón
