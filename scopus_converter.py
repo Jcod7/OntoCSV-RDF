@@ -153,21 +153,37 @@ class ConversorRDFScopus:
         uri = self.crear_uri(tipo_entidad, identificador)
         
         if uri:
-            # Crear propiedades según tipo de entidad
+            # Crear propiedades según tipo de entidad desde config
             propiedades = []
             
-            if tipo_entidad == 'Person':
-                propiedades.append(('foaf:name', nombre))
-                if id_elemento:
-                    propiedades.append(('scopus:authorId', id_elemento))
-            elif tipo_entidad == 'Organization':
-                propiedades.append(('foaf:name', nombre))
-            elif tipo_entidad == 'Concept':
-                propiedades.append(('skos:prefLabel', nombre))
-            elif tipo_entidad == 'Journal':
-                propiedades.append(('dc:title', nombre))
+            # Obtener propiedades desde config.json
+            propiedades_tipo = self.propiedades_por_tipo.get(tipo_entidad, [])
+            
+            if propiedades_tipo:
+                # Usar las propiedades definidas en config.json
+                for prop_info in propiedades_tipo:
+                    if len(prop_info) >= 1:
+                        prop_name = prop_info[0]
+                        
+                        # Determinar el valor según el tipo de propiedad
+                        if 'name' in prop_name.lower() or 'label' in prop_name.lower():
+                            propiedades.append((prop_name, nombre))
+                        elif 'authorId' in prop_name and id_elemento:
+                            propiedades.append((prop_name, id_elemento))
+                        elif 'title' in prop_name.lower():
+                            propiedades.append((prop_name, nombre))
+                        else:
+                            # Propiedad genérica con el nombre
+                            propiedades.append((prop_name, nombre))
+                
+                # Si tiene ID y es Person, agregarlo si no está ya incluido
+                if tipo_entidad == 'Person' and id_elemento:
+                    # Verificar si ya hay una propiedad de ID
+                    tiene_id = any('Id' in prop[0] for prop in propiedades)
+                    if not tiene_id:
+                        propiedades.append(('scopus:authorId', id_elemento))
             else:
-                # Tipo genérico
+                # Fallback para tipos no definidos en config
                 propiedades.append(('rdfs:label', nombre))
             
             # Registrar entidad

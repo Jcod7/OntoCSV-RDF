@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <!-- Success Header -->
+        <div class="text-center mb-4">
+            <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                <i class="fas fa-check fa-3x"></i>
+            </div>
+            <h2 class="mt-3 text-success">¡Conversión Completada!</h2>
+            <p class="lead">Tu archivo CSV ha sido convertido exitosamente a RDF</p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card stats-card bg-primary text-white">
+                    <i class="fas fa-cubes fa-2x mb-2"></i>
+                    <h3>{{ "{:,}".format(stats.entities) }}</h3>
+                    <p class="mb-0">Entidades</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card bg-info text-white">
+                    <i class="fas fa-project-diagram fa-2x mb-2"></i>
+                    <h3>{{ "{:,}".format(stats.triples) }}</h3>
+                    <p class="mb-0">Tripletas RDF</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card bg-warning text-white">
+                    <i class="fas fa-file-alt fa-2x mb-2"></i>
+                    <h3>{{ "%.1f"|format(stats.file_size / 1024) }} KB</h3>
+                    <p class="mb-0">Tamaño</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card bg-success text-white">
+                    <i class="fas fa-download fa-2x mb-2"></i>
+                    <h3>
+                        <a href="{{ url_for('download_file', filename=stats.output_file) }}" 
+                           class="text-white text-decoration-none">
+                            <i class="fas fa-download"></i>
+                        </a>
+                    </h3>
+                    <p class="mb-0">Descargar</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Button -->
+        <div class="text-center mb-4">
+            <a href="{{ url_for('download_file', filename=stats.output_file) }}" 
+               class="btn btn-success btn-lg">
+                <i class="fas fa-download me-2"></i>
+                Descargar {{ stats.output_file }}
+            </a>
+        </div>
+
+        <!-- RDF Preview -->
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-eye me-2"></i>
+                    Vista Previa del RDF Generado
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="rdf-preview">{{ rdf_preview }}</div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="text-center mt-4">
+            <a href="{{ url_for('index') }}" class="btn btn-primary me-2">
+                <i class="fas fa-plus me-2"></i>
+                Convertir Otro Archivo
+            </a>
+            <a href="{{ url_for('view_config') }}" class="btn btn-outline-info">
+                <i class="fas fa-cog me-2"></i>
+                Ver Configuración
+            </a>
+        </div>
+
+        <!-- Info -->
+        <div class="alert alert-success mt-4" role="alert">
+            <h6 class="alert-heading">
+                <i class="fas fa-lightbulb me-2"></i>
+                Archivo generado exitosamente
+            </h6>
+            <ul class="mb-0">
+                <li>Formato: RDF/Turtle (.ttl)</li>
+                <li>Ontología compatible con estándares Scopus</li>
+                <li>Entidades y propiedades optimizadas</li>
+                <li>Listo para usar en aplicaciones semánticas</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h2>
+                <i class="fas fa-cog text-primary me-2"></i>
+                Configuración RDF
+            </h2>
+            <p class="lead text-muted">Configuración actual para la conversión CSV a RDF</p>
+        </div>
+
+        <!-- Ontology Config -->
+        {% if config.ontology %}
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-globe me-2"></i>
+                    Ontología
+                </h5>
+            </div>
+            <div class="card-body">
+                <p><strong>URI Base:</strong> <code>{{ config.ontology.base_uri }}</code></p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Prefixes -->
+        {% if config.prefixes %}
+        <div class="card shadow mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-link me-2"></i>
+                    Prefijos y Namespaces
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for prefix, uri in config.prefixes.items() %}
+                    <div class="col-md-6 mb-2">
+                        <strong>{{ prefix }}:</strong> <code class="text-muted">{{ uri }}</code>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Entity Type Mappings -->
+        {% if config.entity_type_mappings %}
+        <div class="card shadow mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-cubes me-2"></i>
+                    Mapeo de Tipos de Entidad
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for entity, rdf_type in config.entity_type_mappings.items() %}
+                    <div class="col-md-6 mb-2">
+                        <span class="badge bg-primary me-2">{{ entity }}</span>
+                        <code>{{ rdf_type }}</code>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Document Type Mappings -->
+        {% if config.document_type_mappings %}
+        <div class="card shadow mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-file-alt me-2"></i>
+                    Mapeo de Tipos de Documento
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for doc_type, rdf_type in config.document_type_mappings.items() %}
+                    <div class="col-md-6 mb-2">
+                        <span class="badge bg-warning text-dark me-2">{{ doc_type }}</span>
+                        <code>{{ rdf_type }}</code>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Data Types -->
+        {% if config.datatypes %}
+        <div class="card shadow mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-database me-2"></i>
+                    Tipos de Datos
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for field, datatype in config.datatypes.items() %}
+                    <div class="col-md-4 mb-2">
+                        <strong>{{ field }}:</strong> <code class="text-muted">{{ datatype }}</code>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Column Mappings -->
+        {% if config.mappings %}
+        <div class="card shadow mb-4">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-exchange-alt me-2"></i>
+                    Mapeo de Columnas
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                        <thead>
+                            <tr>
+                                <th>Campo CSV</th>
+                                <th>Propiedad RDF</th>
+                                <th>Tipo</th>
+                                <th>Datatype</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for field, mapping in config.mappings.items() %}
+                            {% if not field.startswith('_') %}
+                            <tr>
+                                <td><code>{{ field }}</code></td>
+                                <td><span class="badge bg-primary">{{ mapping.property }}</span></td>
+                                <td>
+                                    {% if mapping.type %}
+                                    <span class="badge bg-success">{{ mapping.type }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if mapping.datatype %}
+                                    <code class="text-muted">{{ mapping.datatype }}</code>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Validation Settings -->
+        {% if config.validation %}
+        <div class="card shadow mb-4">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-check-circle me-2"></i>
+                    Configuración de Validación
+                </h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Campos requeridos:</strong></p>
+                <div class="mb-3">
+                    {% for field in config.validation.required_fields %}
+                    <span class="badge bg-danger me-1">{{ field }}</span>
+                    {% endfor %}
+                </div>
+                <p><strong>Longitud máxima de URI:</strong> {{ config.validation.max_uri_length }}</p>
+                <p><strong>Validación de tipos de datos:</strong> 
+                    {% if config.validation.enable_datatype_validation %}
+                    <span class="badge bg-success">Habilitada</span>
+                    {% else %}
+                    <span class="badge bg-secondary">Deshabilitada</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Actions -->
+        <div class="text-center">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                <i class="fas fa-arrow-left me-2"></i>
+                Volver al Convertidor
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

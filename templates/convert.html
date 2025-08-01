@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <!-- File Info -->
+        <div class="card shadow mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-file-csv me-2"></i>
+                    Archivo Analizado
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <p><strong>Archivo:</strong> {{ file_info.filename }}</p>
+                        <p><strong>Filas:</strong> {{ "{:,}".format(file_info.row_count) }}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p><strong>Columnas:</strong> {{ file_info.headers_count }}</p>
+                        <p><strong>Tamaño:</strong> {{ "%.2f"|format(file_info.file_size / 1024) }} KB</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Delimitador CSV:</strong> 
+                            <span class="badge bg-primary">
+                                {% if file_info.delimiter == ',' %}Coma (,)
+                                {% elif file_info.delimiter == ';' %}Punto y coma (;)
+                                {% elif file_info.delimiter == '\t' %}Tabulación
+                                {% elif file_info.delimiter == '|' %}Barra vertical (|)
+                                {% else %}{{ file_info.delimiter }}{% endif %}
+                            </span>
+                        </p>
+                        <p><strong>Estado:</strong> <span class="badge bg-success">Listo para convertir</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample Data Preview -->
+        {% if file_info.sample_data %}
+        <div class="card shadow mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-eye me-2"></i>
+                    Vista Previa de Datos (hasta 20 filas)
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div style="max-height: 500px; overflow: auto;">
+                    <table class="table table-sm table-striped mb-0">
+                        <thead class="table-dark sticky-top">
+                            <tr>
+                                {% for header in file_info.headers %}
+                                <th style="font-size: 0.8rem; min-width: 120px;">{{ header }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in file_info.sample_data %}
+                            <tr>
+                                {% for header in file_info.headers %}
+                                <td style="font-size: 0.75rem; max-width: 200px; overflow: hidden; text-overflow: ellipsis;" 
+                                    title="{{ row[header] }}">
+                                    {{ (row[header]|string)[:50] }}{% if (row[header]|string|length) > 50 %}...{% endif %}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Base URI Configuration Display -->
+        {% if file_info.base_uri %}
+        <div class="card shadow mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-globe me-2"></i>
+                    URL Base de la Ontología
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-light border mb-0">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h6 class="mb-1">
+                                <i class="fas fa-link me-2 text-primary"></i>
+                                URL configurada:
+                            </h6>
+                            <code class="text-primary">{{ file_info.base_uri }}</code>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Todas las entidades RDF usarán este prefijo
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Multi-Value Delimiters Configuration -->
+        {% if file_info.multi_value_delimiters or file_info.headers %}
+        <div class="card shadow mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-sliders-h me-2"></i>
+                    Configurar Delimitadores de Valores Múltiples
+                </h5>
+            </div>
+            <div class="card-body">
+                <!-- Auto-detected delimiters -->
+                {% if file_info.multi_value_delimiters %}
+                <div class="alert alert-info mb-3">
+                    <h6 class="alert-heading">
+                        <i class="fas fa-magic me-2"></i>
+                        Delimitadores detectados automáticamente:
+                    </h6>
+                    {% for column, delimiter in file_info.multi_value_delimiters.items() %}
+                    <span class="badge bg-info me-2 mb-1">{{ column[:15] }}: "{{ delimiter }}"</span>
+                    {% endfor %}
+                    <p class="mb-0 mt-2"><small>Puedes modificar estos delimitadores abajo si es necesario.</small></p>
+                </div>
+                {% endif %}
+
+                <form action="{{ url_for('convert_file') }}" method="post" id="convertForm">
+                    <input type="hidden" name="filepath" value="{{ file_info.filepath }}">
+                    <input type="hidden" name="delimiter" value="{{ file_info.delimiter }}">
+                    <input type="hidden" name="base_uri" value="{{ file_info.base_uri }}">
+                    
+                    <!-- Multi-value delimiter configuration (Read-only) -->
+                    <div class="mb-4">
+                        <h6><i class="fas fa-columns me-2"></i>Configuración de delimitadores aplicada:</h6>
+                        
+                        {% if file_info.configured_manually %}
+                        <div class="alert alert-success mb-3">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <strong>Configuración manual aplicada.</strong> Los delimitadores no se pueden cambiar en esta pantalla.
+                        </div>
+                        {% endif %}
+                        
+                        <div class="row">
+                            {% for header in file_info.headers %}
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label small"><strong>{{ header[:20] }}{% if header|length > 20 %}...{% endif %}</strong></label>
+                                
+                                {% set delimiter_value = file_info.multi_value_delimiters.get(header, '') %}
+                                
+                                <!-- Campo oculto para enviar el valor -->
+                                <input type="hidden" name="multi_delimiter_{{ header }}" value="{{ delimiter_value }}">
+                                
+                                <!-- Campo visual de solo lectura -->
+                                <div class="input-group">
+                                    <input type="text" class="form-control form-control-sm bg-light" 
+                                           value="{% if delimiter_value %}{{ delimiter_value }} {% if delimiter_value == ';' %}(punto y coma){% elif delimiter_value == ',' %}(coma){% elif delimiter_value == '|' %}(pipe){% elif delimiter_value == ' and ' %}(and){% elif delimiter_value == ' & ' %}(&){% elif delimiter_value == ' - ' %}(guión){% elif delimiter_value == ' / ' %}(barra){% else %}(personalizado){% endif %}{% else %}Sin separar valores múltiples{% endif %}" 
+                                           readonly disabled>
+                                    <span class="input-group-text">
+                                        {% if delimiter_value %}
+                                        <i class="fas fa-check text-success"></i>
+                                        {% else %}
+                                        <i class="fas fa-minus text-muted"></i>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                
+                                {% if delimiter_value %}
+                                <small class="text-success">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    {% if file_info.configured_manually %}Configurado manualmente{% else %}Auto-detectado{% endif %}
+                                </small>
+                                {% else %}
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>Campo literal (sin separación)
+                                </small>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        {% if file_info.configured_manually %}
+                        <div class="text-end">
+                            <small class="text-muted">
+                                <i class="fas fa-arrow-left me-1"></i>
+                                Para cambiar la configuración, vuelve a la página anterior
+                            </small>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Conversion Options -->
+                    <div class="mb-4">
+                        <h6><i class="fas fa-cogs me-2"></i>Opciones de conversión:</h6>
+                        <div class="mb-3">
+                            <label for="max_rows" class="form-label">
+                                <i class="fas fa-filter me-1"></i>
+                                Límite de filas (opcional)
+                            </label>
+                            <input type="number" class="form-control" id="max_rows" name="max_rows" 
+                                   placeholder="Dejar vacío para procesar todas las filas"
+                                   min="1" max="{{ file_info.row_count }}">
+                            <div class="form-text">
+                                Para archivos grandes, puedes limitar el número de filas a procesar
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-magic me-2"></i>
+                            Convertir a RDF
+                        </button>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-outline-warning w-100" onclick="goBackToConfig()">
+                                    <i class="fas fa-cog me-2"></i>
+                                    Cambiar Configuración
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary w-100">
+                                    <i class="fas fa-home me-2"></i>
+                                    Volver al Inicio
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Processing Info -->
+        <div class="alert alert-success mt-4" role="alert">
+            <h6 class="alert-heading">
+                <i class="fas fa-info-circle me-2"></i>
+                ¿Qué son los delimitadores de valores múltiples?
+            </h6>
+            <p class="mb-0">
+                Algunas columnas pueden contener múltiples valores separados por caracteres especiales.
+                Por ejemplo: "Autor1; Autor2; Autor3" o "Keyword1, Keyword2, Keyword3".
+                Configurar estos delimitadores permite generar tripletas RDF más precisas para cada valor individual.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+function goBackToConfig() {
+    // Mostrar confirmación
+    if (confirm('¿Deseas volver a la configuración de delimitadores? Se perderá el análisis actual.')) {
+        // Crear formulario para volver a la página de configuración
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/upload';
+        
+        // Recrear el archivo desde el filepath actual
+        const filepathInput = document.createElement('input');
+        filepathInput.type = 'hidden';
+        filepathInput.name = 'reload_file';
+        filepathInput.value = '{{ file_info.filepath }}';
+        form.appendChild(filepathInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
+{% endblock %}

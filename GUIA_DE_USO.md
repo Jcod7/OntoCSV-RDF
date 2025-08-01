@@ -2,104 +2,222 @@
 
 ## 🎯 **¿Qué hace este programa?**
 
-El **Convertidor Scopus CSV → RDF** transforma automáticamente datos bibliográficos exportados desde Scopus (formato CSV) en una ontología RDF estructurada y consultable. Esto permite:
+El **Convertidor Scopus CSV → RDF** transforma automáticamente datos bibliográficos exportados desde Scopus (formato CSV) en una ontología RDF estructurada y consultable. Incluye una interfaz web moderna con configuración avanzada de delimitadores.
 
-- ✅ **Crear redes de conocimiento** a partir de publicaciones académicas
-- ✅ **Generar ontologías semánticas** usando estándares internacionales
-- ✅ **Analizar relaciones** entre autores, conceptos y organizaciones
-- ✅ **Preparar datos** para consultas SPARQL y análisis avanzados
+### 🌟 **Características principales:**
+- ✅ **Interfaz web moderna** con configuración visual
+- ✅ **URL base personalizable** para ontologías organizacionales
+- ✅ **Configuración inteligente de delimitadores** por columna
+- ✅ **Detección automática** de formatos CSV
+- ✅ **Vista previa de datos** antes de conversión
+- ✅ **45+ mapeos automáticos** CSV → propiedades RDF
+- ✅ **Vocabularios semánticos estándar** (Dublin Core, FOAF, BIBO, SKOS, Schema.org)
 
 ---
 
-## 🚀 **INICIO RÁPIDO (3 pasos)**
+## 🚀 **INICIO RÁPIDO**
 
-### **Paso 1: Ejecutar el Programa**
+### **Paso 1: Instalar Dependencias**
 ```bash
-# Opción A: Interfaz Gráfica (Recomendado)
-python ejecutar.py
-
-# Opción B: Ejecución Directa
-python scopus_converter.py
+pip install flask pandas werkzeug
 ```
 
-### **Paso 2: Seleccionar Archivo CSV**
-- Click en **"Buscar..."**
-- Seleccionar su archivo `.csv` exportado de Scopus
-- El programa validará automáticamente el formato
+### **Paso 2: Ejecutar la Aplicación Web**
+```bash
+python web_interface.py
+```
 
-### **Paso 3: Convertir**
-- Click en **"Convertir a RDF"**
-- Esperar el procesamiento (se muestra progreso)
-- ¡Listo! Su ontología RDF estará en formato `.ttl`
+Abrir en el navegador: **http://localhost:5000**
+
+### **Paso 3: Proceso de Conversión**
+1. **📤 Subir archivo CSV** exportado de Scopus
+2. **🌐 Configurar URL base** de tu ontología (opcional)
+3. **⚙️ Configurar delimitadores** CSV y multivalor
+4. **🔍 Revisar análisis** con configuración aplicada
+5. **🚀 Convertir y descargar** archivo TTL generado
 
 ---
 
-## 🖥️ **INTERFAZ GRÁFICA - Guía Detallada**
+## 🌐 **INTERFAZ WEB - Guía Detallada**
 
-### **Pantalla Principal:**
+### **🎨 Flujo Visual Completo:**
 
+#### **1. 📤 Página de Inicio**
 ```
 ┌─────────────────────────────────────────────────┐
-│        Convertidor Scopus CSV -> RDF/Turtle    │
+│         Scopus CSV to RDF Converter             │
 ├─────────────────────────────────────────────────┤
 │                                                 │
-│ Archivo CSV de Scopus:                         │
-│ [________________________] [Buscar...]         │
+│  📁 Convertidor de Datos Bibliográficos        │
 │                                                 │
-│ Archivo RDF de salida:                          │
-│ [________________________] [Guardar como...]   │
+│  Transforma archivos CSV de Scopus en          │
+│  ontologías RDF/Turtle estructuradas           │
 │                                                 │
-│ Estado: Listo para convertir                    │
-│ [████████████████████████████] 100%             │
+│  [📂 Seleccionar archivo CSV...]               │
 │                                                 │
-│        [Convertir a RDF]  [Salir]               │
-│                                                 │
-│ Información:                                    │
-│ • Selecciona archivo CSV exportado de Scopus   │
-│ • La conversión puede tardar varios minutos     │
-│ • Se mostrarán estadísticas al finalizar        │
+│  Formatos soportados: .csv, .txt               │
+│  Tamaño máximo: 50MB                           │
 └─────────────────────────────────────────────────┘
 ```
 
-### **Controles Principales:**
+#### **2. ⚙️ Página de Configuración**
+```
+┌─────────────────────────────────────────────────┐
+│          Configurar Delimitadores               │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ 🌐 URL Base de la Ontología:                   │
+│ [https://mi-universidad.edu/ontologia/____] 🔄  │
+│                                                 │
+│ 📋 Delimitador CSV detectado: , (coma) ✅       │
+│ ○ , (coma)     ○ ; (punto y coma)              │
+│ ○ ⭾ (tab)      ○ | (pipe)                      │
+│                                                 │
+│ 📊 Configuración por columna:                  │
+│ Authors      [; (punto y coma) ▼] ✅           │
+│ Keywords     [; (punto y coma) ▼] ✅           │
+│ Title        [-- Sin separar -- ▼] ➖          │
+│ Year         [-- Sin separar -- ▼] ➖          │
+│                                                 │
+│ 👁️ Vista previa (2 primeras filas):            │
+│ ┌─────────────────────────────────────────────┐ │
+│ │Authors    │Title         │Year    │Keywords │ │
+│ │Smith,J.;  │AI Research   │2024    │ML;AI;NN │ │
+│ │García,M.  │              │        │         │ │
+│ └─────────────────────────────────────────────┘ │
+│                                                 │
+│        [🔍 Analizar con esta Configuración]    │
+└─────────────────────────────────────────────────┘
+```
 
-#### **1. 📂 Selección de Archivo CSV**
-- **Función:** Permite elegir el archivo CSV de Scopus a convertir
-- **Formatos aceptados:** `.csv` (exportado desde Scopus)
-- **Validación:** El programa verifica que el archivo tenga las columnas requeridas
+#### **3. 📊 Página de Análisis**
+```
+┌─────────────────────────────────────────────────┐
+│            Archivo Analizado ✅                 │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ 📄 scopus_data.csv                             │
+│ 📊 1,250 registros │ 📋 25 columnas            │
+│ 🔧 Delimitador: , (coma)                       │
+│                                                 │
+│ 🌐 URL Base Configurada:                       │
+│ https://mi-universidad.edu/ontologia/           │
+│                                                 │
+│ ⚙️ Configuración de delimitadores aplicada:    │
+│ Authors      [; (punto y coma) ✅] Manual       │
+│ Keywords     [; (punto y coma) ✅] Manual       │
+│ Title        [Sin separar      ➖] Literal      │
+│                                                 │
+│ 🎛️ Opciones adicionales:                       │
+│ Limitar registros: [_____] (opcional)          │
+│                                                 │
+│    [🚀 Convertir a RDF]                       │
+│                                                 │
+│  [🔧 Cambiar Config] [🏠 Inicio]               │
+└─────────────────────────────────────────────────┘
+```
 
-#### **2. 💾 Archivo de Salida**
-- **Función:** Define dónde guardar la ontología RDF generada
-- **Formato:** `.ttl` (Turtle - formato RDF estándar)
-- **Auto-naming:** Se sugiere automáticamente basado en el archivo de entrada
+#### **4. ✅ Página de Resultados**
+```
+┌─────────────────────────────────────────────────┐
+│         🎉 Conversión Completada               │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ ✅ Archivo procesado exitosamente               │
+│                                                 │
+│ 📊 Estadísticas de conversión:                 │
+│ • Entidades generadas: 4,572                   │
+│ • Tripletas RDF: 23,847                        │
+│ • Tamaño archivo: 8.2 MB                       │
+│ • Tiempo procesamiento: 2m 34s                 │
+│                                                 │
+│ 📈 Tipos de entidades:                         │
+│ • 👥 Personas: 1,256                           │
+│ • 🏷️ Conceptos: 2,104                          │
+│ • 🏢 Organizaciones: 567                       │
+│ • 📚 Publicaciones: 645                        │
+│                                                 │
+│ 👁️ Vista previa TTL (primeras líneas):         │
+│ ┌─────────────────────────────────────────────┐ │
+│ │@prefix rdf: <http://www.w3.org/1999/02/... │ │
+│ │<https://mi-universidad.edu/ontologia/...   │ │
+│ └─────────────────────────────────────────────┘ │
+│                                                 │
+│     [📥 Descargar TTL] [🔄 Convertir Nuevo]    │
+└─────────────────────────────────────────────────┘
+```
 
-#### **3. 🚀 Botón "Convertir a RDF"**
-- **Función:** Inicia el proceso de transformación
-- **Progreso:** Muestra barra de progreso durante la conversión
-- **Estadísticas:** Al finalizar, muestra resumen detallado
+### **🎛️ Características Avanzadas:**
+
+#### **🌐 URL Base Personalizable**
+- **Función:** Define el prefijo de todas las entidades RDF
+- **Por defecto:** `https://onto.utpl.edu.ec/scopus/resource/`
+- **Personalizable:** Cambiar por tu dominio organizacional
+- **Ejemplo:** `https://mi-universidad.edu/ontologia/`
+- **Validación:** Automática con formato URL correcto
+
+#### **🔧 Configuración Inteligente de Delimitadores**
+- **Detección automática:** Identifica el mejor delimitador CSV
+- **Configuración por columna:** Cada campo puede tener su propio delimitador
+- **Sugerencias inteligentes:** 
+  - `Authors, Keywords, Affiliations` → `;` (punto y coma)
+  - `Title, DOI, Year, Abstract` → Sin delimitador (literal)
+- **Vista previa:** Muestra cómo se procesarán los datos
+
+#### **📊 Análisis Pre-conversión**
+- **Campos de solo lectura:** Configuración bloqueada en página de análisis
+- **Estadísticas del archivo:** Filas, columnas, tamaño
+- **Configuración confirmada:** Resumen visual de toda la configuración
+- **Opción de modificar:** Botón para volver a configurar si es necesario
 
 ---
 
 ## ⚙️ **CONFIGURACIÓN AVANZADA**
 
-### **Archivo `config.json`**
+### **🔧 Archivo `config.json`**
 
-El comportamiento del convertidor se controla mediante `config.json`:
+El convertidor utiliza un archivo de configuración JSON que define cómo se mapean las columnas CSV a propiedades RDF. Este archivo se puede personalizar para diferentes tipos de datos bibliográficos.
+
+#### **📋 Estructura Principal:**
 
 ```json
 {
   "ontology": {
     "base_uri": "https://onto.utpl.edu.ec/scopus/resource/"
   },
+  "prefixes": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "dc": "http://purl.org/dc/elements/1.1/",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "bibo": "http://purl.org/ontology/bibo/",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "schema": "http://schema.org/"
+  },
+  "entity_type_mappings": {
+    "Person": "foaf:Person",
+    "Concept": "skos:Concept", 
+    "Organization": "foaf:Organization",
+    "Journal": "bibo:Journal"
+  },
   "mappings": {
     "Authors": {"property": "dc:creator", "type": "Person"},
-    "Title": {"property": "dc:title", "datatype": "xsd:string"}
-  },
-  "validation": {
-    "required_fields": ["Title", "Authors", "Year"]
+    "Title": {"property": "dc:title", "datatype": "xsd:string"},
+    "Author Keywords": {"property": "dc:subject", "type": "Concept"},
+    "Year": {"property": "dcterms:date", "datatype": "xsd:gYear"}
   }
 }
 ```
+
+#### **🌐 Configuración Web vs Archivo**
+
+| Elemento | Configurable en Web | Archivo config.json |
+|----------|---------------------|-------------------|
+| **URL Base** | ✅ Campo editable | ✅ `ontology.base_uri` |
+| **Delimitadores CSV** | ✅ Detección automática | ❌ No aplica |
+| **Delimitadores Multivalor** | ✅ Por columna | ❌ No aplica |
+| **Mapeos RDF** | ❌ Solo lectura | ✅ Completamente editable |
+| **Vocabularios** | ❌ Solo lectura | ✅ `prefixes` |
+| **Validación** | ❌ Solo lectura | ✅ `validation` |
 
 #### **Secciones Configurables:**
 
@@ -120,24 +238,51 @@ El comportamiento del convertidor se controla mediante `config.json`:
 
 ---
 
-## 💻 **USO POR LÍNEA DE COMANDOS**
+## 💻 **USO PROGRAMÁTICO Y LÍNEA DE COMANDOS**
 
-### **Ejecución Básica:**
-```python
-from scopus_converter import ConversorRDFScopus
+### **🌐 Interfaz Web (Recomendado)**
+```bash
+# Ejecutar servidor web
+python web_interface.py
 
-# Crear instancia del convertidor
-converter = ConversorRDFScopus()
-
-# Convertir archivo específico
-converter.ejecutar("mi_archivo.csv")
+# Acceder en navegador
+# http://localhost:5000
 ```
 
-### **Con Configuración Personalizada:**
+### **🔧 Uso Programático Básico:**
 ```python
-# Usar configuración personalizada
-converter = ConversorRDFScopus("mi_config.json")
-converter.ejecutar("datos_scopus.csv")
+from web_interface import EnhancedConversorRDFScopus
+
+# Crear instancia del convertidor
+converter = EnhancedConversorRDFScopus()
+
+# Configurar URL base personalizada
+converter.set_base_uri("https://mi-universidad.edu/ontologia/")
+
+# Configurar delimitadores multivalor por columna
+delimitadores = {
+    "Authors": ";",
+    "Keywords": ";", 
+    "Title": "",  # Sin delimitador (literal)
+    "Year": ""    # Sin delimitador (literal)
+}
+converter.set_multi_value_delimiters(delimitadores)
+
+# Procesar archivo
+converter.procesar_csv("datos_scopus.csv")
+
+# Generar RDF
+rdf_content = converter.generar_ttl()
+
+# Guardar archivo
+with open("ontologia.ttl", "w", encoding="utf-8") as f:
+    f.write(rdf_content)
+```
+
+### **🎯 Uso con GUI Tradicional (Alternativo)**
+```bash
+# Solo si no se puede usar la interfaz web
+python scopus_converter.py
 ```
 
 ---
@@ -196,7 +341,37 @@ Antes de explicar las funciones, es importante entender tres tipos de datos que 
 
 ---
 
-### **Clase `ConversorRDFScopus`**
+### **🏗️ Arquitectura de Clases**
+
+El proyecto incluye dos clases principales:
+
+#### **📋 `ConversorRDFScopus` (Clase Base)**
+- **Ubicación:** `scopus_converter.py`
+- **Propósito:** Funcionalidad core de conversión CSV → RDF
+- **Interfaz:** GUI tradicional con Tkinter (opcional)
+
+#### **🌐 `EnhancedConversorRDFScopus` (Clase Extendida)**
+- **Ubicación:** `web_interface.py`  
+- **Propósito:** Extiende la clase base con funcionalidades web
+- **Características adicionales:**
+  - URL base personalizable por conversión
+  - Delimitadores multivalor configurables por columna
+  - Integración con interfaz web Flask
+
+```python
+# Jerarquía de herencia
+class ConversorRDFScopus:           # Clase base
+    # Funcionalidad core...
+
+class EnhancedConversorRDFScopus(ConversorRDFScopus):  # Clase extendida
+    def set_base_uri(self, base_uri)
+    def set_multi_value_delimiters(self, delimiters_dict)
+    # Hereda toda la funcionalidad base...
+```
+
+---
+
+### **Clase `ConversorRDFScopus` (Base)**
 
 #### **📋 `__init__(self, ruta_config="config.json")`**
 ```python
@@ -817,34 +992,151 @@ Entidades por tipo:
 
 ---
 
-## 🎯 **CASOS DE USO TÍPICOS**
+## 🎯 **CASOS DE USO Y EJEMPLOS PRÁCTICOS**
 
-### **1. 🔬 Investigación Académica**
-- Analizar redes de colaboración entre autores
-- Identificar tendencias temáticas en publicaciones
-- Mapear relaciones institucionales
+### **1. 🏛️ Universidad con Repositorio Institucional**
 
-### **2. 📊 Bibliometría**
-- Generar métricas de impacto por autor/institución
-- Analizar evolución temporal de conceptos
-- Crear visualizaciones de redes de conocimiento
+**Escenario:** Una universidad quiere convertir sus publicaciones Scopus para integrarlas en su repositorio institucional.
 
-### **3. 🌐 Web Semántica**
-- Integrar datos bibliográficos en portales web
-- Crear endpoints SPARQL para consultas
-- Interoperar con otras ontologías académicas
+**Proceso con Interfaz Web:**
+1. **🌐 URL Base:** `https://biblioteca.universidad.edu/ontologia/`
+2. **📊 Configuración:** Delimitadores automáticos para autores y palabras clave
+3. **🎯 Resultado:** Ontología con URIs institucionales únicas
+
+**Beneficios:**
+- URIs consistentes con el dominio institucional
+- Fácil integración con sistemas existentes
+- Procesamiento masivo de datos bibliográficos
+
+### **2. 🔬 Grupo de Investigación Multidisciplinario**
+
+**Escenario:** Investigadores quieren analizar tendencias y colaboraciones en su área.
+
+**Proceso:**
+1. **📤 Datos:** Exportar CSV desde Scopus con sus publicaciones
+2. **⚙️ Configuración:** Definir delimitadores específicos por revista/conferencia
+3. **📈 Análisis:** Usar SPARQL para consultar redes de colaboración
+
+**Consulta de ejemplo:**
+```sparql
+SELECT ?autor1 ?autor2 (COUNT(?pub) as ?colaboraciones)
+WHERE {
+  ?pub dc:creator ?autor1 .
+  ?pub dc:creator ?autor2 .
+  FILTER(?autor1 != ?autor2)
+}
+GROUP BY ?autor1 ?autor2
+ORDER BY DESC(?colaboraciones)
+```
+
+### **3. 🌐 Portal de Conocimiento Abierto**
+
+**Escenario:** Organización que mantiene un portal público de conocimiento científico.
+
+**Implementación:**
+- **🔄 Procesamiento periódico:** Interfaz web para convertir nuevas exportaciones
+- **🎛️ Configuraciones múltiples:** Diferentes URL base por área temática
+- **📊 Integración:** Conexión con endpoints SPARQL públicos
+
+### **4. 📚 Biblioteca Digital con Metadatos Enriquecidos**
+
+**Ventajas del enfoque web:**
+1. **👥 Acceso múltiple:** Bibliotecarías pueden procesar archivos sin conocimientos técnicos
+2. **🔧 Configuración visual:** Ajustar delimitadores según fuentes diversas
+3. **📋 Validación:** Vista previa antes de conversión definitiva
+4. **🌐 Consistencia:** URL base unificada para toda la institución
 
 ---
 
-## 🚀 **PRÓXIMOS PASOS**
+## 🚀 **PRÓXIMOS PASOS Y HERRAMIENTAS**
 
-Una vez generada la ontología RDF:
+Una vez generada la ontología RDF con la interfaz web:
 
-1. **📊 Análisis:** Usar herramientas como Gephi o Cytoscape
-2. **🔍 Consultas:** Implementar queries SPARQL personalizadas  
-3. **🌐 Publicación:** Servir datos via endpoint SPARQL
-4. **🔗 Integración:** Conectar con otras ontologías existentes
+### **📊 Análisis y Visualización**
+1. **Gephi:** Importar TTL para visualizar redes de colaboración
+2. **Cytoscape:** Análisis de redes complejas de citaciones
+3. **Apache Jena:** Procesamiento programático de RDF
+4. **Protégé:** Edición y validación de ontologías
+
+### **🔍 Consultas SPARQL**
+```sparql
+# Ejemplo: Top 10 autores más productivos
+SELECT ?autor (COUNT(?pub) as ?publicaciones)
+WHERE {
+  ?pub dc:creator ?autor .
+}
+GROUP BY ?autor
+ORDER BY DESC(?publicaciones)
+LIMIT 10
+```
+
+### **🌐 Publicación y Integración**
+1. **Fuseki/Virtuoso:** Montar endpoint SPARQL público
+2. **GitHub Pages:** Publicar ontologías con documentación
+3. **LOD Cloud:** Conectar con Linked Open Data
+4. **APIs REST:** Exponer datos vía servicios web
+
+### **🔧 Automatización**
+```python
+# Script para procesamiento batch
+import os
+from web_interface import EnhancedConversorRDFScopus
+
+def procesar_directorio(directorio_csv, base_uri):
+    converter = EnhancedConversorRDFScopus()
+    converter.set_base_uri(base_uri)
+    
+    for archivo in os.listdir(directorio_csv):
+        if archivo.endswith('.csv'):
+            print(f"Procesando {archivo}...")
+            converter.procesar_csv(os.path.join(directorio_csv, archivo))
+            
+    # Generar ontología combinada
+    with open("ontologia_completa.ttl", "w") as f:
+        f.write(converter.generar_ttl())
+```
+
+### **📚 Recursos Adicionales**
+- **RDF Primer:** https://www.w3.org/TR/rdf-primer/
+- **SPARQL Tutorial:** https://www.w3.org/TR/sparql11-query/
+- **Linked Data:** https://linkeddata.org/
+- **Vocabularios:** https://lov.linkeddata.es/
 
 ---
 
-**¿Necesitas ayuda adicional?** Consulta el archivo `REPORTE_EJECUCION.md` para detalles técnicos completos.
+## 🔧 **SOPORTE Y DESARROLLO**
+
+### **📁 Estructura del Proyecto**
+```
+scopus-csv-rdf/
+├── web_interface.py          # 🌐 Interfaz web principal
+├── scopus_converter.py       # 🔧 Convertidor base  
+├── config.json              # ⚙️ Configuración RDF
+├── templates/               # 🎨 Plantillas HTML
+│   ├── index.html
+│   ├── configure_delimiter.html
+│   ├── convert.html
+│   └── result.html
+├── requirements.txt         # 📦 Dependencias
+├── uploads/                # 📤 Archivos CSV subidos
+├── outputs/                # 📥 Archivos TTL generados
+└── README.md               # 📖 Documentación
+```
+
+### **🛠️ Requisitos del Sistema**
+- **Python:** 3.7+
+- **Dependencias:** Flask, pandas, werkzeug
+- **Navegador:** Chrome, Firefox, Safari, Edge (moderno)
+- **Memoria:** 4GB+ (para archivos CSV grandes)
+- **Disco:** 100MB+ espacio libre
+
+### **🐛 Resolución de Problemas**
+| Problema | Solución |
+|----------|----------|
+| **Error al subir archivo** | Verificar tamaño < 50MB y formato CSV |
+| **Delimitadores incorrectos** | Usar vista previa para validar configuración |
+| **URIs malformadas** | Verificar URL base termina en `/` |
+| **Memoria insuficiente** | Procesar por lotes o usar menos registros |
+| **Puerto ocupado** | Cambiar puerto en `web_interface.py` línea 377 |
+
+**¿Necesitas ayuda técnica?** La interfaz web incluye validación automática y mensajes de error descriptivos para facilitar el uso.

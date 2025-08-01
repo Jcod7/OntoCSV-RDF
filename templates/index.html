@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h1 class="display-4 text-primary">
+                <i class="fas fa-file-csv me-3"></i>
+                Convertidor Scopus CSV a RDF
+            </h1>
+            <p class="lead text-muted">
+                Convierte archivos CSV de Scopus a formato RDF/Turtle con configuración optimizada
+            </p>
+        </div>
+
+        <!-- Upload Form -->
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-upload me-2"></i>
+                    Subir Archivo CSV
+                </h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+                    <div class="upload-area mb-3">
+                        <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                        <h5>Selecciona tu archivo CSV de Scopus</h5>
+                        <p class="text-muted">Arrastra y suelta o haz clic para seleccionar</p>
+                        <input type="file" class="form-control" name="file" accept=".csv,.txt" required>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-upload me-2"></i>
+                            Subir y Analizar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="fas fa-magic fa-2x"></i>
+                    </div>
+                    <h5 class="mt-3">Conversión Automática</h5>
+                    <p class="text-muted">Convierte automáticamente usando la configuración optimizada para Scopus</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="fas fa-chart-bar fa-2x"></i>
+                    </div>
+                    <h5 class="mt-3">Estadísticas Detalladas</h5>
+                    <p class="text-muted">Obtén métricas detalladas sobre entidades y tripletas generadas</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="fas fa-download fa-2x"></i>
+                    </div>
+                    <h5 class="mt-3">Descarga Inmediata</h5>
+                    <p class="text-muted">Descarga el archivo RDF generado inmediatamente después de la conversión</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info -->
+        <div class="alert alert-info mt-4" role="alert">
+            <h6 class="alert-heading">
+                <i class="fas fa-info-circle me-2"></i>
+                Información importante
+            </h6>
+            <ul class="mb-0">
+                <li>Formatos soportados: CSV, TXT</li>
+                <li>Tamaño máximo: 50MB</li>
+                <li>Configuración optimizada para datos de Scopus</li>
+                <li>Genera ontología en formato Turtle (.ttl)</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
